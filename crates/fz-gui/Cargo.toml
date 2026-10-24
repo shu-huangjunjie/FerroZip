@@ -1,0 +1,27 @@
+[package]
+name = "fz-gui"
+description = "FerroZip: open-source, ad-free archiver for Windows"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+build = "build.rs"
+
+[[bin]]
+name = "FerroZip"
+path = "src/main.rs"
+
+[features]
+default = ["rar"]
+rar = ["fz-core/rar"]
+
+[dependencies]
+eframe = { version = "0.37.0", default-features = false, features = ["glow", "default_fonts", "accesskit"] }
+egui_extras = "0.37.0"
+fz-core = { path = "../fz-core", default-features = false }
+fz-shell = { path = "../fz-shell" }
+rfd = "0.17.2"
+time = { version = "0.3.55", features = ["local-offset"] }
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Threading"] }
+
+[build-dependencies]
+winresource = "0.1"

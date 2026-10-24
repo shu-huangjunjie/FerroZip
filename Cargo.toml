@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+members = ["crates/fz-core", "crates/fz-cli", "crates/fz-gui", "crates/fz-shell", "crates/fz-setup"]
+# The installer embeds the release builds of the others; package.ps1 builds it.
+default-members = ["crates/fz-core", "crates/fz-cli", "crates/fz-gui", "crates/fz-shell"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+
+# Keep test/dev builds of the compression code fast enough to benchmark.
+[profile.dev.package."*"]
+opt-level = 3

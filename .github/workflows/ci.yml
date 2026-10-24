@@ -1,0 +1,33 @@
+name: Windows build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        shell: pwsh
+        run: rustup toolchain install stable-x86_64-pc-windows-msvc --profile minimal
+      # Build the payload before the installer tests embed the release binaries.
+      - name: Build installer
+        shell: pwsh
+        run: ./package.ps1
+      - name: Test workspace
+        run: cargo test --workspace --locked
+      - name: Check build without RAR support
+        run: cargo check --locked -p fz-core -p fz-cli -p fz-gui --no-default-features
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: FerroZip-Windows-x64
+          path: dist/FerroZip-Setup-*.exe
+          if-no-files-found: error

@@ -1,0 +1,11 @@
+[package]
+name = "fz-shell"
+description = "FerroZip Windows integration: associations, context menus, install record, shortcuts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mslnk = "0.1"
+winreg = "0.56.0"
+windows-sys = { version = "0.61.2", features = ["Win32_Foundation", "Win32_System_Com", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }

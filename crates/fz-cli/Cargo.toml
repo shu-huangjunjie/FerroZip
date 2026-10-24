@@ -1,0 +1,18 @@
+[package]
+name = "fz-cli"
+description = "FerroZip command-line archiver"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "fz"
+path = "src/main.rs"
+
+[features]
+default = ["rar"]
+rar = ["fz-core/rar"]
+
+[dependencies]
+fz-core = { path = "../fz-core", default-features = false }
+time = { version = "0.3", features = ["local-offset"] }

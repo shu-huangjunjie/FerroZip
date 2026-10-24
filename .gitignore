@@ -1,0 +1,17 @@
+/target
+*.fztmp
+/dist
+
+# Local test inputs (may contain third-party software or private data).
+/test/
+
+# Local credentials and editor state.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/.idea/
+/.vscode/
+Thumbs.db
+.DS_Store
