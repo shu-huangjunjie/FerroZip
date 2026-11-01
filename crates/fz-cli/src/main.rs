@@ -5,7 +5,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use fz_core::codepage::Codepage;
-use fz_core::util::human_bytes;
+use fz_core::util::{archive_stem, human_bytes, unique_path};
 use fz_core::*;
 
 const USAGE: &str = "\
@@ -22,7 +22,7 @@ FerroZip 命令行
   -t <N>        线程数 (0=全部 CPU)                      默认 0
   -p <密码>     密码 (ZIP 使用 AES-256)
   -m zstd       ZIP 使用 Zstandard 压缩方法 (默认 Deflate)
-  -o <目录>     解压目标目录 (默认: 智能解压到压缩文件旁)
+  -o <目录>     解压目标目录 (默认: 压缩文件旁的同名文件夹)
   -y / -s / -r  已存在的文件: 覆盖 / 跳过 / 自动重命名     默认 覆盖
   -cp <名称>    文件名编码: auto utf8 gbk big5 sjis euckr cp437
 ";
@@ -153,7 +153,7 @@ fn run(a: Args) -> Result<()> {
                     Some(o) => o.clone(),
                     None => {
                         let parent = std::path::absolute(&a.archive)?.parent().map(PathBuf::from).unwrap_or_default();
-                        smart_destination(&archive, &parent)
+                        unique_path(&parent.join(archive_stem(&archive.path)))
                     }
                 };
                 let opts = ExtractOptions {

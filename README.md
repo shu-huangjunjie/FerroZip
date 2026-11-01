@@ -49,7 +49,8 @@
 - **格式**：创建 ZIP、7Z、TAR、TAR.GZ、TAR.ZST、TAR.XZ、TAR.BZ2；打开/解压以上全部，外加 RAR（含 RAR5）、GZ/ZST/XZ/BZ2 单文件、自解压 ZIP
 - **加密**：ZIP 用 AES-256（WinZip AE-2，Bandizip、7-Zip、WinRAR 都能解）；7Z 用 AES-256，可加密文件名
 - **类 Bandizip 界面**：工具栏、地址栏面包屑、文件夹树、可排序多选列表、搜索、状态栏；双击文件直接用默认程序打开
-- **智能解压**：压缩包里只有一个顶层文件夹时直接解压到旁边，否则新建同名文件夹
+- **默认解压**：工具栏“解压”、右键“解压到…”和命令行 `fz x` 默认在压缩包所在目录下新建同名文件夹，内容放入其中；已有同名路径时自动加编号，避免与原有目录合并
+- **智能解压**（单独菜单）：压缩包里只有一个顶层项目且目标不存在时直接解压到旁边，否则新建同名文件夹
 - **右键菜单**（设置里一键添加，只写 HKCU，无需管理员）：压缩为 ZIP/7Z、压缩到…、智能解压、解压到当前文件夹、解压到…；在资源管理器里多选会合并成一个任务
 - **中文文件名**：没有 UTF-8 标记的旧 ZIP 自动按系统代码页（GBK 等）解码，也可以手动选编码
 - 拖放：拖入压缩文件就打开，拖入普通文件就新建压缩文件
@@ -103,6 +104,14 @@ GitHub 的 Actions 页面中，成功的 `Windows build and test` 运行会提�
 cargo build --release --locked
 ```
 
+在项目根目录运行图形界面（开发时可省略 `--release`）：
+
+```powershell
+cargo run --release --locked -p fz-gui --bin FerroZip
+# 直接打开指定压缩包
+cargo run --release --locked -p fz-gui --bin FerroZip -- "D:\BaiduNetdiskDownload\Tecplot 360 EX 2025 R1(64bit).zip"
+```
+
 产物：
 
 - `target/release/FerroZip.exe` — 图形界面
@@ -115,12 +124,14 @@ cargo build --release --locked
 
 ```
 fz a [-l 0-9] [-t 线程] [-p 密码] [-m zstd] 输出.zip 文件或文件夹...
-fz x [-o 目录] [-p 密码] [-y|-s|-r] 压缩文件     # 不带 -o 时智能解压
+fz x [-o 目录] [-p 密码] [-y|-s|-r] 压缩文件     # 不带 -o 时解压到旁边的同名文件夹
 fz l 压缩文件
 fz t 压缩文件
 ```
 
 格式由扩展名决定：`.zip .7z .tar .tar.gz .tar.zst .tar.xz .tar.bz2`。
+
+例如，`fz x "D:\BaiduNetdiskDownload\Tecplot 360 EX 2025 R1(64bit).zip"` 默认解压到 `D:\BaiduNetdiskDownload\Tecplot 360 EX 2025 R1(64bit)\`，即使压缩包内只有一个顶层文件夹也会保留这一层同名目录。指定 `-o` 则直接使用给定目录。
 
 ## 代码结构
 

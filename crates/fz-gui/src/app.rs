@@ -557,7 +557,7 @@ impl App {
 
     fn open_extract_dialog(&mut self, selection: Option<Vec<usize>>, strip: String) {
         let Some(a) = &self.archive else { return };
-        let dest = smart_destination(a, &self.archive_parent());
+        let dest = unique_path(&self.archive_parent().join(archive_stem(&a.path)));
         self.dialog = Some(Dialog::Extract(ExtractDlg {
             dest: dest.display().to_string(),
             selection,
